@@ -12,8 +12,8 @@ void setup()
 void loop() 
 {
  B=analogRead(A0);
- A=(B*0.004887585);
- C=36*A;
+ A=((B*5)/1023);
+ C=39,5*A;
  Serial.print(A);
  Serial.print("\t");
  Serial.println(C);
