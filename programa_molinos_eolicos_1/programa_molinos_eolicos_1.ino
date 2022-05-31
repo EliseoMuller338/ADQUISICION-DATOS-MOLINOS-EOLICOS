@@ -10,7 +10,7 @@ void setup()
 }
 
 void loop() 
-{
+{//entrada analogica
  B=analogRead(A0);
  A=((B*5)/1023);
  C=39.5*A;
