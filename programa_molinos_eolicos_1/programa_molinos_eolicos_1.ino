@@ -17,23 +17,40 @@
  * Manejo SD
  * - Funciones en manejoSD (configuración y almacenamiento de datos) 
  */
-float B=0;
-float C=0;
-float A=0;
-
-void setup() 
-{
- Serial.begin(9600);
- pinMode(A0,INPUT);
- 
+#include "ManejoClock.h"
+#include "ManejoSD.h"
+RTC_DS3231 rtc;
+Registro Datos;
+int pin = 3;
+volatile int state = LOW;
+unsigned long tiempoInicial;
+int contadorPulso = 0;
+int tension=0;
+const unsigned long tiempoFrecuencia=2000;
+void setup() {
+  Serial.begin(9600);
+  // put your setup code here, to run once:
+  InicioSD();
+  InicioRTC(rtc);
+  pinMode(pin, INPUT);
+  attachInterrupt(digitalPinToInterrupt(pin), cuentaPulso, RISING);
 }
 
-void loop() 
-{//entrada analogica
- B=analogRead(A0);
- A=((B*5)/1023);
- C=39.5*A;
- Serial.print(A);
- Serial.print("\t");
- Serial.println(C);
+void loop() {
+  
+  if (millis() - tiempoInicial >= 2000)
+  {
+    analogWrite(5, contadorPulso);
+    tiempoInicial = millis();
+    tension=analogRead(A0);
+    Datos.dataString=TiempoActual(rtc);
+    Datos.Frecuencia=String(contadorPulso*1000/tiempoFrecuencia);
+    Datos.Tension=String(tension);
+    EscribirRegistro(Datos);
+    contadorPulso = 0;
+  }
+}
+
+void cuentaPulso() {
+  contadorPulso++;
 }
