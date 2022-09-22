@@ -38,13 +38,13 @@ void setup() {
 
 void loop() {
   
-  if (millis() - tiempoInicial >= 2000)
+  if (millis() - tiempoInicial >= tiempoFrecuencia)
   {
     analogWrite(5, contadorPulso);
     tiempoInicial = millis();
     tension=analogRead(A0);
     Datos.dataString=TiempoActual(rtc);
-    Datos.Frecuencia=String(contadorPulso*1000/tiempoFrecuencia);
+    Datos.Frecuencia=String(contadorPulso);
     Datos.Tension=String(tension);
     EscribirRegistro(Datos);
     contadorPulso = 0;
